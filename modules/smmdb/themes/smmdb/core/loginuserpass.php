@@ -43,7 +43,15 @@ foreach ($this->data['stateparams'] as $name => $value) {
 				<input type="password" id="password" name="password" class="form-control" placeholder="<?php echo $this->t('{login:password}'); ?>">
 				<button class="btn btn-lg btn-primary btn-block" type="submit"><?php echo $this->t('{login:login_button}'); ?></button>
 			</form>
-
+<?php
+if ($this->data['errorcode'] !== NULL) {
+?>
+			<div id="error">
+				<h2><?php echo $this->t('{login:error_header}'); ?></h2>
+				<p style="clear: both"><b><?php echo $this->t('{errors:title_' . $this->data['errorcode'] . '}'); ?></b></p>
+				<p><?php echo $this->t('{errors:descr_' . $this->data['errorcode'] . '}'); ?></p>
+			</div>
+<?php } ?>
 		</div>
 	</body>
 </html>
