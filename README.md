@@ -1,7 +1,7 @@
 # SMMDB Module for SimpleSamlPhp
 
 * Copy the directory to the modules folder. It is enabled by default.
-* Add the following to config/authsources.php:
+* Add the following to `config/authsources.php`:
 
 ```php
 'smmdb' => array(
