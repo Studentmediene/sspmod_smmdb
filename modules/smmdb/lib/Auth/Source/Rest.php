@@ -145,8 +145,14 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 			throw new SimpleSAML_Error_Error('WRONGUSERPASS');
 		}
 
-		if ($userDataRequest->body)
-			return get_object_vars($userDataRequest->body);
+		if ($userDataRequest->body) {
+			$result = get_object_vars($userDataRequest->body);
+			foreach($result as $key => &$value) {
+				if (!is_array($value))
+					$value = array($value);
+			}
+			return $result;
+		}
 		throw new SimpleSAML_Error_Error('WRONGUSERPASS');
 	}
 }
