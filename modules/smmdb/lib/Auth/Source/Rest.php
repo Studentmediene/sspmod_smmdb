@@ -18,7 +18,7 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 	private $smmdb_port;
 	private $smmdb_api_key;
 	private $smmdb_insecure;
-	
+
 	/**
 	 * inherits from sspmod_core_Auth_UserPassBase
 	 *
@@ -42,7 +42,7 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 		$this->smmdb_insecure = isset($config['smmdb_insecure']) && $config['smmdb_insecure'];
 		$this->smmdb_api_key = ''.$config['smmdb_api_key'];
 	}
-	
+
 	/**
 	 * String indicating the hostname where smmdb runs
 	 * @return string smmdb hostname
@@ -82,7 +82,7 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 	protected static function generateUri($host, $port, $path, $insecure=false) {
 		return 'http'.($insecure?'':'s').'://'.rawurlencode($host).($port?':'.$port:'').'/api/'.ltrim($path,'/');
 	}
-	
+
 	/**
 	 * Attempt login, takes login credentials username and password
 	 * and returns whether smmdb accepts these.
@@ -104,7 +104,7 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 
 		return $this->fetchUserData($username);
 	}
-	
+
 	/**
 	 * Retrieve user data from smmdb for one user.
 	 * This function assumes that the user has been logged in correctly,
