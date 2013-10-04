@@ -111,6 +111,7 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 			$logonAttempt = Request::post($uri)
 				->body('password='.rawurlencode($password))
 				->expectsType('application/json')
+				->sendsType(Mime::FORM)
 				->timeout($this->getTimeout())
 				->send();
 		} catch (ConnectionErrorException $e) {
@@ -137,6 +138,7 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 		try {
 			$userDataRequest = Request::get($uri)
 				->expectsType('application/json')
+				->sendsType(Mime::FORM)
 				->timeout($this->getTimeout())
 				->send();
 		} catch (ConnectionErrorException $e) {
