@@ -99,7 +99,7 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 			->expectsJson('application/json')
 			->send();
 
-		if (!isset($logonAttempt->body->password_ok) || !$response->body->password_ok)
+		if (!isset($logonAttempt->body->correct_password) || !$logonAttempt->body->correct_password)
 			throw new SimpleSAML_Error_Error('WRONGUSERPASS');
 
 		return $this->fetchUserData($username);
