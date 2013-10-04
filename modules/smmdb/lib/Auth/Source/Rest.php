@@ -91,7 +91,7 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 	 * @return bool the credentials were accepted by smmdb
 	 */
 	protected function login($username, $password) {
-		$path = 'user/by_username/'.rawurlencode($username).'/password';
+		$path = 'user/by_username/'.rawurlencode($username).'/check_password';
 		$uri = $this->generateUri($this->getSmmdbHost(), $this->getSmmdbPort(), $this->getApiKey(), $path, $this->isInsecure());
 
 		$logonAttempt = Request::post($uri)
