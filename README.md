@@ -9,6 +9,7 @@
 	'smmdb_host' => 'hostname',
 	'smmdb_api_key' => NULL,
 	'smmdb_insecure' => true,
+	'smmdb_timeout' => 2,
 ),
 ```
 * Change the theme in `config/config.php` to `smmdb:smmdb`.

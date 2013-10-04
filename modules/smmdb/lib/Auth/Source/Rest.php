@@ -12,12 +12,15 @@
 require_once dirname(__FILE__) . '/httpful.phar';
 
 use \Httpful\Request;
+use \Httpful\Mime;
+use \Httpful\Exception\ConnectionErrorException;
 
 class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 	private $smmdb_host;
 	private $smmdb_port;
 	private $smmdb_api_key;
 	private $smmdb_insecure;
+	private $smmdb_timeout;
 
 	/**
 	 * inherits from sspmod_core_Auth_UserPassBase
@@ -37,10 +40,13 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 		assert('(int)$config["smmdb_port"] <= 65535 && (int)$config["smmdb_port"] >= 0', 'smmdb_port out of bounds');
 		assert('is_string($config["smmdb_host"]);');
 		assert('is_string($config["smmdb_api_key"]);');
+		assert('!preg_replace("_[0-9]_", "", $config["smmdb_timeout"])', 'smmdb_timeout is not an integer');
+		assert('(int)$config["smmdb_timeout"] <= 60 && (int)$config["smmdb_timeout"] > 0', 'smmdb_timeout out of bounds');
 		$this->smmdb_host = ''.$config['smmdb_host'];
 		$this->smmdb_port = (int)$config['smmdb_port'];
 		$this->smmdb_insecure = isset($config['smmdb_insecure']) && $config['smmdb_insecure'];
 		$this->smmdb_api_key = ''.$config['smmdb_api_key'];
+		$this->smmdb_timeout = $config['smmdb_timeout'];
 	}
 
 	/**
@@ -71,6 +77,13 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 	public function isInsecure() {
 		return $this->smmdb_insecure;
 	}
+	/**
+	 * Integer which indicates how long to wait for an answer from smmdb.
+	 * @return int seconds to wait for reply
+	 */
+	public function getTimeout() {
+		return $this->smmdb_timeout;
+	}
 
 	/**
 	 * Generate a url
@@ -94,10 +107,15 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 		$path = 'user/by_username/'.rawurlencode($username).'/check_password';
 		$uri = $this->generateUri($this->getSmmdbHost(), $this->getSmmdbPort(), $this->getApiKey(), $path, $this->isInsecure());
 
-		$logonAttempt = Request::post($uri)
-			->body('password='.rawurlencode($password))
-			->expectsJson('application/json')
-			->send();
+		try {
+			$logonAttempt = Request::post($uri)
+				->body('password='.rawurlencode($password))
+				->expectsType('application/json')
+				->timeout($this->getTimeout())
+				->send();
+		} catch (ConnectionErrorException $e) {
+			throw new SimpleSAML_Error_Error('WRONGUSERPASS');
+		}
 
 		if (!isset($logonAttempt->body->correct_password) || !$logonAttempt->body->correct_password)
 			throw new SimpleSAML_Error_Error('WRONGUSERPASS');
@@ -116,9 +134,14 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 		$path = 'user/by_username/'.rawurlencode($username);
 		$uri = $this->generateUri($this->getSmmdbHost(), $this->getSmmdbPort(), $this->getApiKey(), $path, $this->isInsecure());
 
-		$userDataRequest = Request::get($uri)
-			->expectsType('application/json')
-			->send();
+		try {
+			$userDataRequest = Request::get($uri)
+				->expectsType('application/json')
+				->timeout($this->getTimeout())
+				->send();
+		} catch (ConnectionErrorException $e) {
+			throw new SimpleSAML_Error_Error('WRONGUSERPASS');
+		}
 
 		if ($userDataRequest->body)
 			return get_object_vars($userDataRequest->body);
