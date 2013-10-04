@@ -79,8 +79,8 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 	 * @param $path string path in URL part
 	 * @param $insecure bool protocol to use (1=http/0=https)
 	 */
-	protected static function generateUri($host, $port, $path, $insecure=false) {
-		return 'http'.($insecure?'':'s').'://'.rawurlencode($host).($port?':'.$port:'').'/api/'.ltrim($path,'/');
+	protected static function generateUri($host, $port, $apiKey, $path, $insecure=false) {
+		return 'http'.($insecure?'':'s').'://'.rawurlencode($host).($port?':'.$port:'').'/api/'.ltrim($path,'/').'?key='.rawurlencode($apiKey);
 	}
 
 	/**
@@ -92,7 +92,7 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 	 */
 	protected function login($username, $password) {
 		$path = 'user/by_username/'.rawurlencode($username).'/password';
-		$uri = $this->generateUri($this->getSmmdbHost(), $this->getSmmdbPort(), $path, $this->isInsecure());
+		$uri = $this->generateUri($this->getSmmdbHost(), $this->getSmmdbPort(), $this->getApiKey(), $path, $this->isInsecure());
 
 		$logonAttempt = Request::post($uri)
 			->body('password='.rawurlencode($password))
@@ -114,7 +114,7 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 	 */
 	private function fetchUserData($username) {
 		$path = 'user/by_username/'.rawurlencode($username);
-		$uri = $this->generateUri($this->getSmmdbHost(), $this->getSmmdbPort(), $path, $this->isInsecure());
+		$uri = $this->generateUri($this->getSmmdbHost(), $this->getSmmdbPort(), $this->getApiKey(), $path, $this->isInsecure());
 
 		$userDataRequest = Request::get($uri)
 			->expectsType('application/json')
