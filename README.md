@@ -7,7 +7,7 @@
 'smmdb' => array(
 	'smmdb:Rest',
 	'smmdb_host' => 'hostname',
-	'smmdb_api_key' => NULL,
+	'smmdb_api_key' => 'api-key',
 	'smmdb_insecure' => true,
 	'smmdb_timeout' => 2,
 ),
