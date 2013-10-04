@@ -31,7 +31,14 @@ foreach ($languages as $lang => $current) {
 			<form class="form-signin" method="post" action="?">
 				<img src="<?php echo SimpleSAML_Module::getModuleURL('smmdb/images/smit_logo_300px.png'); ?>" width="300px">
 				<h2 class="form-signin-heading">Logg inn</h2>
-				
+<?php
+if ($this->data['errorcode'] !== NULL) {
+?>
+				<div class="alert alert-danger" title="<?php echo $this->t('{errors:descr_' . $this->data['errorcode'] . '}'); ?>">
+					<strong><?php echo $this->t('{login:error_header}'); ?>:</strong> <?php echo $this->t('{errors:title_' . $this->data['errorcode'] . '}'); ?>
+				</div>
+<?php } ?>
+
 				<div style="display:none;"><?php
 foreach ($this->data['stateparams'] as $name => $value) {
 	echo('<input type="hidden" name="' . htmlspecialchars($name) . '" value="' . htmlspecialchars($value) . '" />');
@@ -43,15 +50,6 @@ foreach ($this->data['stateparams'] as $name => $value) {
 				<input type="password" id="password" name="password" class="form-control" placeholder="<?php echo $this->t('{login:password}'); ?>">
 				<button class="btn btn-lg btn-primary btn-block" type="submit"><?php echo $this->t('{login:login_button}'); ?></button>
 			</form>
-<?php
-if ($this->data['errorcode'] !== NULL) {
-?>
-			<div id="error">
-				<h2><?php echo $this->t('{login:error_header}'); ?></h2>
-				<p style="clear: both"><b><?php echo $this->t('{errors:title_' . $this->data['errorcode'] . '}'); ?></b></p>
-				<p><?php echo $this->t('{errors:descr_' . $this->data['errorcode'] . '}'); ?></p>
-			</div>
-<?php } ?>
 		</div>
 	</body>
 </html>
