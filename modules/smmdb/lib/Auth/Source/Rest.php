@@ -156,4 +156,3 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 		throw new SimpleSAML_Error_Error('WRONGUSERPASS');
 	}
 }
-
