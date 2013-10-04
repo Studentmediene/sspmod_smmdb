@@ -62,7 +62,7 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 	 * @return string smmdb api key
 	 */
 	public function getApiKey() {
-		return $this->$smmdb_api_key;
+		return $this->smmdb_api_key;
 	}
 	/**
 	 * Boolean to indicate whether to use http (true) or https (false)
