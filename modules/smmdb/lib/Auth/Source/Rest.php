@@ -33,8 +33,8 @@ class sspmod_smmdb_Auth_Source_Rest extends sspmod_core_Auth_UserPassBase {
 		parent::__construct($info, $config);
 		if (!isset($config['smmdb_port']))
 			$config['smmdb_port'] = 0;
-		assert('preg_replace("_[0-9]_", "", $config["smmdb_port"])', 'smmdb_port is not an integer');
-		assert('(int)$config["smmdb_port"] > 65535 || (int)$config["smmdb_port"] < 0', 'smmdb_port out of bounds');
+		assert('!preg_replace("_[0-9]_", "", $config["smmdb_port"])', 'smmdb_port is not an integer');
+		assert('(int)$config["smmdb_port"] <= 65535 && (int)$config["smmdb_port"] >= 0', 'smmdb_port out of bounds');
 		assert('is_string($config["smmdb_host"]);');
 		assert('is_string($config["smmdb_api_key"]);');
 		$this->smmdb_host = ''.$config['smmdb_host'];
